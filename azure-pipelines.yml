@@ -37,4 +37,19 @@ steps:
     csmFile: '$(Build.SourcesDirectory)\AzureResourceGroup2\azuredeploy.json'
     csmParametersFile: '$(Build.SourcesDirectory)\AzureResourceGroup2\azuredeploy.parameters.json'
     overrideParameters: '-customData $(CloudInitContent) -adminPassword $(AdminPass)'
+    deploymentMode: 'Validation'
+
+- task: AzureResourceManagerTemplateDeployment@3
+  inputs:
+    deploymentScope: 'Resource Group'
+    azureResourceManagerConnection: 'Abonnement Azure 1(c12e3863-d62a-4433-863c-579912ccbf98)'
+    subscriptionId: 'c12e3863-d62a-4433-863c-579912ccbf98'
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: 'RG-ScaleSet'
+    location: 'Canada Central'
+    templateLocation: 'Linked artifact'
+    csmFile: '$(Build.SourcesDirectory)\AzureResourceGroup2\azuredeploy.json'
+    csmParametersFile: '$(Build.SourcesDirectory)\AzureResourceGroup2\azuredeploy.parameters.json'
+    overrideParameters: '-customData $(CloudInitContent) -adminPassword $(AdminPass)'
     deploymentMode: 'Incremental'
+
