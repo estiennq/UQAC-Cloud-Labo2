@@ -1,0 +1,40 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+pool: "default"
+
+variables:
+- name: CloudInitContent
+
+steps:
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      $CloudContent = Get-Content -Path .\AzureResourceGroup2\Cloud-init.txt -Raw
+      Write-Host $CloudContent
+      $encodedContent = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($CloudContent))
+      Write-Host $encodedContent
+      Write-Host "##vso[task.setvariable variable=CloudInitContent;]$encodedContent"
+
+- script: |
+    echo $(CloudInitContent)
+
+- task: AzureResourceManagerTemplateDeployment@3
+  inputs:
+    deploymentScope: 'Resource Group'
+    azureResourceManagerConnection: 'Abonnement Azure 1(c12e3863-d62a-4433-863c-579912ccbf98)'
+    subscriptionId: 'c12e3863-d62a-4433-863c-579912ccbf98'
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: 'RG-ScaleSet'
+    location: 'Canada Central'
+    templateLocation: 'Linked artifact'
+    csmFile: '$(Build.SourcesDirectory)\AzureResourceGroup2\azuredeploy.json'
+    csmParametersFile: '$(Build.SourcesDirectory)\AzureResourceGroup2\azuredeploy.parameters.json'
+    overrideParameters: '-customData $(CloudInitContent) -adminPassword $(AdminPass)'
+    deploymentMode: 'Incremental'
