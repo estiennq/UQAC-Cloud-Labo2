@@ -1,4 +1,5 @@
 #Requires -Version 3.0
+#test fermeture tache de test azure board
 
 Param(
     [string] [Parameter(Mandatory=$true)] $ResourceGroupLocation,
