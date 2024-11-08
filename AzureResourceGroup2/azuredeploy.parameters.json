@@ -2,5 +2,169 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
+    "location": {
+      "value": "canadacentral"
+    },
+    "osDiskType": {
+      "value": "StandardSSD_LRS"
+    },
+    "addressPrefixes": {
+      "value": [
+        "10.0.0.0/16"
+      ]
+    },
+    "subnets": {
+      "value": [
+        {
+          "name": "default",
+          "properties": {
+            "addressPrefix": "10.0.0.0/20"
+          }
+        }
+      ]
+    },
+    "virtualNetworkId": {
+      "value": "/subscriptions/c12e3863-d62a-4433-863c-579912ccbf98/resourceGroups/RG-ScaleSet/providers/Microsoft.Network/virtualNetworks/RG-ScaleSet-vnet"
+    },
+    "virtualNetworkName": {
+      "value": "RG-ScaleSet-vnet"
+    },
+    "networkSecurityGroups": {
+      "value": [
+        {
+          "name": "basicNsgRG-ScaleSet-vnet-nic01",
+          "id": "/subscriptions/c12e3863-d62a-4433-863c-579912ccbf98/resourceGroups/RG-ScaleSet/providers/Microsoft.Network/networkSecurityGroups/basicNsgRG-ScaleSet-vnet-nic01",
+          "rules": [
+            {
+              "name": "Tcp",
+              "properties": {
+                "priority": 300,
+                "protocol": "Tcp",
+                "access": "Allow",
+                "direction": "Inbound",
+                "sourceAddressPrefix": "*",
+                "sourcePortRange": "*",
+                "destinationAddressPrefix": "*",
+                "destinationPortRange": "80"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "networkInterfaceConfigurations": {
+      "value": [
+        {
+          "name": "RG-ScaleSet-vnet-nic01",
+          "primary": true,
+          "subnetId": "/subscriptions/c12e3863-d62a-4433-863c-579912ccbf98/resourceGroups/RG-ScaleSet/providers/Microsoft.Network/virtualNetworks/RG-ScaleSet-vnet/subnets/default",
+          "applicationGatewayBackendAddressPools": [],
+          "loadBalancerBackendAddressPools": [
+            {
+              "id": "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', parameters('loadBalancerName'), parameters('backendPoolName'))]"
+            }
+          ],
+          "applicationSecurityGroups": [],
+          "loadBalancerInboundNatPools": [],
+          "enableAcceleratedNetworking": false,
+          "nsgName": "basicNsgRG-ScaleSet-vnet-nic01",
+          "nsgId": "/subscriptions/c12e3863-d62a-4433-863c-579912ccbf98/resourceGroups/RG-ScaleSet/providers/Microsoft.Network/networkSecurityGroups/basicNsgRG-ScaleSet-vnet-nic01",
+          "pipName": "publicIp-RG-ScaleSet-vnet-nic01"
+        }
+      ]
+    },
+    "backendPoolName": {
+      "value": "bepool"
+    },
+    "loadBalancerName": {
+      "value": "lb1"
+    },
+    "loadbalancingRuleFrontEndPort": {
+      "value": 80
+    },
+    "loadbalancingRuleBackendEndPort": {
+      "value": 80
+    },
+    "loadbalancingRuleProtocol": {
+      "value": "Tcp"
+    },
+    "InboundNATRuleFrontEndPortRangeStart": {
+      "value": 50000
+    },
+    "vmName": {
+      "value": "VMScaleset1"
+    },
+    "virtualMachineScaleSetName": {
+      "value": "VMScaleset1"
+    },
+    "instanceCount": {
+      "value": "2"
+    },
+    "instanceSize": {
+      "value": "Standard_DS1_v2"
+    },
+    "zone": {
+      "value": [
+        "1",
+        "2",
+        "3"
+      ]
+    },
+    "zoneBalance": {
+      "value": "false"
+    },
+    "platformFaultDomainCount": {
+      "value": "1"
+    },
+    "scaleInPolicy": {
+      "value": {
+        "rules": [
+          "Default"
+        ],
+        "forceDeletion": false
+      }
+    },
+    "upgradePolicy": {
+      "value": "Manual"
+    },
+    "hibernationEnabled": {
+      "value": false
+    },
+    "adminUsername": {
+      "value": "vmAdmin"
+    },
+    "adminPassword": {
+      "value": null
+    },
+    "customData": {
+      "value": null
+    },
+    "securityType": {
+      "value": "TrustedLaunch"
+    },
+    "secureBoot": {
+      "value": true
+    },
+    "vTPM": {
+      "value": true
+    },
+    "healthExtensionProtocol": {
+      "value": "http"
+    },
+    "healthExtensionPort": {
+      "value": 80
+    },
+    "healthExtensionRequestPath": {
+      "value": "/"
+    },
+    "autoRepairsPolicyEnabled": {
+      "value": false
+    },
+    "gracePeriod": {
+      "value": "PT10M"
+    },
+    "autoRepairsAction": {
+      "value": "Replace"
+    }
   }
 }
