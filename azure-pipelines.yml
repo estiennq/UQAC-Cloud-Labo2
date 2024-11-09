@@ -12,7 +12,61 @@ variables:
 - name: CloudInitContent
 
 steps:
+
+#Validation des templates du Key vault et du secret avant leur déploiement  
+- task: AzureResourceManagerTemplateDeployment@3
+  displayName: Validating Azure KeyVault and adding Secret templates
+  inputs:
+    deploymentScope: 'Resource Group'
+    azureResourceManagerConnection: 'Abonnement Azure 1(c12e3863-d62a-4433-863c-579912ccbf98)'
+    subscriptionId: 'c12e3863-d62a-4433-863c-579912ccbf98'
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: 'KeyVault-RG'
+    location: 'Canada Central'
+    templateLocation: 'Linked artifact'
+    csmFile: '$(Build.SourcesDirectory)\AzureResourceGroup2\azuredeploy_key_vault.json'
+    csmParametersFile: '$(Build.SourcesDirectory)\AzureResourceGroup2\azuredeploy_key_vault.parameters.json'
+    overrideParameters: '-Secret $(AdminPassword)'
+    deploymentMode: 'Validation'
+
+#Déploiement du key vault et ajout du secret dedans après validation des templates
+- task: AzureResourceManagerTemplateDeployment@3
+  displayName: Deploying Azure KeyVault + adding Secret
+  inputs:
+    deploymentScope: 'Resource Group'
+    azureResourceManagerConnection: 'Abonnement Azure 1(c12e3863-d62a-4433-863c-579912ccbf98)'
+    subscriptionId: 'c12e3863-d62a-4433-863c-579912ccbf98'
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: 'KeyVault-RG'
+    location: 'Canada Central'
+    templateLocation: 'Linked artifact'
+    csmFile: '$(Build.SourcesDirectory)\AzureResourceGroup2\azuredeploy_key_vault.json'
+    csmParametersFile: '$(Build.SourcesDirectory)\AzureResourceGroup2\azuredeploy_key_vault.parameters.json'
+    overrideParameters: '-Secret $(AdminPassword)'
+    deploymentMode: 'Incremental'
+
+# Récupération du secret dans le Azure Key Vault
+- task: AzureKeyVault@2
+  displayName: Getting Secret from key vault
+  inputs:
+    azureSubscription: 'Abonnement Azure 1(c12e3863-d62a-4433-863c-579912ccbf98)'
+    KeyVaultName: 'Vault-Labo1'
+    SecretsFilter: 'AdminPass'
+    RunAsPreJob: false
+
+# affichage du secret pour vérifier qu'il ne s'affiche pas en clair
 - task: PowerShell@2
+  displayName: Test Secret
+  inputs:
+    targetType: 'inline'
+    script: |
+          Write-host $(AdminPass)
+
+
+
+#encryption du fichier cloud-init.txt en Base64 pour qu'Azure accepte de l'utiliser 
+- task: PowerShell@2
+  displayName: Encrypting cloud-init.txt in Base64
   inputs:
     targetType: 'inline'
     script: |
@@ -22,10 +76,13 @@ steps:
       Write-Host $encodedContent
       Write-Host "##vso[task.setvariable variable=CloudInitContent;]$encodedContent"
 
+#affichage du contenu du fichier CloudInit après son encryption 
 - script: |
     echo $(CloudInitContent)
 
+#Validation des templates du scaleset avant son déploiement  
 - task: AzureResourceManagerTemplateDeployment@3
+  displayName: Validating scaleset template
   inputs:
     deploymentScope: 'Resource Group'
     azureResourceManagerConnection: 'Abonnement Azure 1(c12e3863-d62a-4433-863c-579912ccbf98)'
@@ -39,7 +96,9 @@ steps:
     overrideParameters: '-customData $(CloudInitContent) -adminPassword $(AdminPass)'
     deploymentMode: 'Validation'
 
+#Déploiement du Scaleset de VM après validation des templates
 - task: AzureResourceManagerTemplateDeployment@3
+  displayName: Deploying scaleset template
   inputs:
     deploymentScope: 'Resource Group'
     azureResourceManagerConnection: 'Abonnement Azure 1(c12e3863-d62a-4433-863c-579912ccbf98)'
