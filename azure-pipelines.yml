@@ -13,6 +13,8 @@ variables:
 
 steps:
 
+
+
 #Validation des templates du Key vault et du secret avant leur déploiement  
 - task: AzureResourceManagerTemplateDeployment@3
   displayName: Validating Azure KeyVault and adding Secret templates
