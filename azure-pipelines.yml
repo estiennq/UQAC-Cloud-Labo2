@@ -28,7 +28,7 @@ steps:
     templateLocation: 'Linked artifact'
     csmFile: '$(Build.SourcesDirectory)\AzureResourceGroup2\azuredeploy_key_vault.json'
     csmParametersFile: '$(Build.SourcesDirectory)\AzureResourceGroup2\azuredeploy_key_vault.parameters.json'
-    overrideParameters: '-Secret $(AdminPassword)'
+    overrideParameters: '-Secret $(testPassword)'
     deploymentMode: 'Validation'
 
 #Déploiement du key vault et ajout du secret dedans après validation des templates
@@ -44,7 +44,7 @@ steps:
     templateLocation: 'Linked artifact'
     csmFile: '$(Build.SourcesDirectory)\AzureResourceGroup2\azuredeploy_key_vault.json'
     csmParametersFile: '$(Build.SourcesDirectory)\AzureResourceGroup2\azuredeploy_key_vault.parameters.json'
-    overrideParameters: '-Secret $(AdminPassword)'
+    overrideParameters: '-Secret $(testPassword)'
     deploymentMode: 'Incremental'
 
 # Récupération du secret dans le Azure Key Vault
