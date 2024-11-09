@@ -28,7 +28,7 @@ steps:
     templateLocation: 'Linked artifact'
     csmFile: '$(Build.SourcesDirectory)\AzureResourceGroup2\azuredeploy_key_vault.json'
     csmParametersFile: '$(Build.SourcesDirectory)\AzureResourceGroup2\azuredeploy_key_vault.parameters.json'
-    overrideParameters: '-Secret $(AdminPassword)'
+    overrideParameters: '-Secret $(PasswordAdmin)' #la variable PasswordAdmin est créée par le pipeline et est gardée secrète
     deploymentMode: 'Validation'
 
 #Déploiement du key vault et ajout du secret dedans après validation des templates
@@ -44,7 +44,7 @@ steps:
     templateLocation: 'Linked artifact'
     csmFile: '$(Build.SourcesDirectory)\AzureResourceGroup2\azuredeploy_key_vault.json'
     csmParametersFile: '$(Build.SourcesDirectory)\AzureResourceGroup2\azuredeploy_key_vault.parameters.json'
-    overrideParameters: '-Secret $(AdminPassword)'
+    overrideParameters: '-Secret $(PasswordAdmin)'
     deploymentMode: 'Incremental'
 
 # Récupération du secret dans le Azure Key Vault
@@ -52,8 +52,8 @@ steps:
   displayName: Getting Secret from key vault
   inputs:
     azureSubscription: 'Abonnement Azure 1(c12e3863-d62a-4433-863c-579912ccbf98)'
-    KeyVaultName: 'Vault-Labo1'
-    SecretsFilter: 'AdminPass'
+    KeyVaultName: 'Vault-Labo1' # nom du key vault que l'on a crée juste avant
+    SecretsFilter: 'AdminPass' # nom du secret
     RunAsPreJob: false
 
 # affichage du secret pour vérifier qu'il ne s'affiche pas en clair
@@ -64,6 +64,8 @@ steps:
     script: |
           Write-host $(AdminPass)
 
+
+# on va déployer des machines virtuelles Ubuntu 
 
 
 #encryption du fichier cloud-init.txt en Base64 pour qu'Azure accepte de l'utiliser 
