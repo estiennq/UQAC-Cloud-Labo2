@@ -13,7 +13,7 @@ variables:
 
 steps:
 
-#Validation des templates du Key vault et du secret avant leur déploiement  
+#Validation des templates du Key vault et du secret avant leur dÃ©ploiement  
 - task: AzureResourceManagerTemplateDeployment@3
   displayName: Validating Azure KeyVault and adding Secret templates
   inputs:
@@ -29,7 +29,7 @@ steps:
     overrideParameters: '-Secret $(AdminPassword)'
     deploymentMode: 'Validation'
 
-#Déploiement du key vault et ajout du secret dedans après validation des templates
+#DÃ©ploiement du key vault et ajout du secret dedans aprÃ¨s validation des templates
 - task: AzureResourceManagerTemplateDeployment@3
   displayName: Deploying Azure KeyVault + adding Secret
   inputs:
@@ -45,7 +45,7 @@ steps:
     overrideParameters: '-Secret $(AdminPassword)'
     deploymentMode: 'Incremental'
 
-# Récupération du secret dans le Azure Key Vault
+# RÃ©cupÃ©ration du secret dans le Azure Key Vault
 - task: AzureKeyVault@2
   displayName: Getting Secret from key vault
   inputs:
@@ -54,7 +54,7 @@ steps:
     SecretsFilter: 'AdminPass'
     RunAsPreJob: false
 
-# affichage du secret pour vérifier qu'il ne s'affiche pas en clair
+# affichage du secret pour vÃ©rifier qu'il ne s'affiche pas en clair
 - task: PowerShell@2
   displayName: Test Secret
   inputs:
@@ -76,11 +76,11 @@ steps:
       Write-Host $encodedContent
       Write-Host "##vso[task.setvariable variable=CloudInitContent;]$encodedContent"
 
-#affichage du contenu du fichier CloudInit après son encryption 
+#affichage du contenu du fichier CloudInit aprÃ¨s son encryption 
 - script: |
     echo $(CloudInitContent)
 
-#Validation des templates du scaleset avant son déploiement  
+#Validation des templates du scaleset avant son dÃ©ploiement  
 - task: AzureResourceManagerTemplateDeployment@3
   displayName: Validating scaleset template
   inputs:
@@ -96,7 +96,7 @@ steps:
     overrideParameters: '-customData $(CloudInitContent) -adminPassword $(AdminPass)'
     deploymentMode: 'Validation'
 
-#Déploiement du Scaleset de VM après validation des templates
+#DÃ©ploiement du Scaleset de VM aprÃ¨s validation des templates
 - task: AzureResourceManagerTemplateDeployment@3
   displayName: Deploying scaleset template
   inputs:
