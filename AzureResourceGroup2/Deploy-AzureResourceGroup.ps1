@@ -113,7 +113,7 @@ if ($null -eq (Get-AzResourceGroup -Name $ResourceGroupName -Location $ResourceG
     Write-Host "Creating resource group $ResourceGroupName..."
     New-AzResourceGroup -Name $ResourceGroupName -Location $ResourceGroupLocation -Verbose -Force -ErrorAction Stop
 }
-
+# if the deployment mode is Validation
 if ($ValidateOnly) {
     Write-Host "Validating..."
     $ErrorMessages = Format-ValidationOutput (Test-AzResourceGroupDeployment -ResourceGroupName $ResourceGroupName `
@@ -126,7 +126,7 @@ if ($ValidateOnly) {
     else {
         Write-Output '', 'Template is valid.'
     }
-}
+}# if the deployment mode is not Validation (Incremental or Complete)
 else {
     Write-Host "Deploying..."
     New-AzResourceGroupDeployment -Name ((Get-ChildItem $TemplateFile).BaseName + '-' + ((Get-Date).ToUniversalTime()).ToString('MMdd-HHmm')) `
