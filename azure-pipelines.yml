@@ -15,7 +15,7 @@ steps:
 
 
 
-#Validation des templates du Key vault et du secret avant leur déploiement  
+#Validation du template du Key vault et du secret avant leur déploiement  
 - task: AzureResourceManagerTemplateDeployment@3
   displayName: Validating Azure KeyVault and adding Secret templates
   inputs:
@@ -26,12 +26,12 @@ steps:
     resourceGroupName: 'KeyVault-RG'
     location: 'Canada Central'
     templateLocation: 'Linked artifact'
-    csmFile: '$(Build.SourcesDirectory)\AzureResourceGroup2\azuredeploy_key_vault.json'
-    csmParametersFile: '$(Build.SourcesDirectory)\AzureResourceGroup2\azuredeploy_key_vault.parameters.json'
+    csmFile: '$(Build.SourcesDirectory)\AzureResourceGroup2\azuredeploy_key_vault.json' # emplacement du template
+    csmParametersFile: '$(Build.SourcesDirectory)\AzureResourceGroup2\azuredeploy_key_vault.parameters.json' # emplacement des paramètres utilisés par le template
     overrideParameters: '-Secret $(PasswordAdmin)' #la variable PasswordAdmin est créée par le pipeline et est gardée secrète
     deploymentMode: 'Validation'
 
-#Déploiement du key vault et ajout du secret dedans après validation des templates
+#Déploiement du key vault et ajout du secret dedans après validation du template
 - task: AzureResourceManagerTemplateDeployment@3
   displayName: Deploying Azure KeyVault + adding Secret
   inputs:
@@ -84,7 +84,7 @@ steps:
 - script: |
     echo $(CloudInitContent)
 
-#Validation des templates du scaleset avant son déploiement  
+#Validation du template du scaleset avant son déploiement  
 - task: AzureResourceManagerTemplateDeployment@3
   displayName: Validating scaleset template
   inputs:
@@ -100,7 +100,7 @@ steps:
     overrideParameters: '-customData $(CloudInitContent) -adminPassword $(AdminPass)'
     deploymentMode: 'Validation'
 
-#Déploiement du Scaleset de VM après validation des templates
+#Déploiement du Scaleset de VM après validation du template
 - task: AzureResourceManagerTemplateDeployment@3
   displayName: Deploying scaleset template
   inputs:
