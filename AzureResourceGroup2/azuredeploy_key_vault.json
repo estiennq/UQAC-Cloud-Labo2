@@ -1,0 +1,90 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "name": {
+      "type": "String"
+    },
+    "location": {
+      "type": "String"
+    },
+    "sku": {
+      "type": "String"
+    },
+    "accessPolicies": {
+      "type": "Array"
+    },
+    "tenant": {
+      "type": "String"
+    },
+    "enabledForDeployment": {
+      "type": "Bool"
+    },
+    "enabledForTemplateDeployment": {
+      "type": "Bool"
+    },
+    "enabledForDiskEncryption": {
+      "type": "Bool"
+    },
+    "enableRbacAuthorization": {
+      "type": "Bool"
+    },
+    "publicNetworkAccess": {
+      "type": "String"
+    },
+    "enableSoftDelete": {
+      "type": "Bool"
+    },
+    "softDeleteRetentionInDays": {
+      "type": "Int"
+    },
+    "networkAcls": {
+      "type": "Object"
+    },
+    "Secret": {
+      "type": "SecureString"
+    }
+  },
+  "variables": {},
+  "resources": [
+    {
+      "type": "Microsoft.KeyVault/vaults",
+      "apiVersion": "2024-04-01-preview",
+      "name": "[parameters('name')]",
+      "location": "canadacentral",
+      "properties": {
+        "sku": {
+          "family": "A",
+          "name": "Standard"
+        },
+        "tenantId": "fc7eb63d-ee41-4d2c-bccd-1c66fba91634",
+        "accessPolicies": [],
+        "enabledForDeployment": true,
+        "enabledForDiskEncryption": false,
+        "enabledForTemplateDeployment": true,
+        "enableSoftDelete": true,
+        "softDeleteRetentionInDays": 7,
+        "enableRbacAuthorization": true,
+        "vaultUri": "https://vault-labo1.vault.azure.net/",
+        "provisioningState": "Succeeded",
+        "publicNetworkAccess": "Enabled"
+      }
+    },
+    {
+      "type": "Microsoft.KeyVault/vaults/secrets",
+      "apiVersion": "2024-04-01-preview",
+      "name": "[concat(parameters('name'), '/AdminPass')]",
+      "location": "canadacentral",
+      "dependsOn": [
+        "[resourceId('Microsoft.KeyVault/vaults', parameters('name'))]"
+      ],
+      "properties": {
+        "contentType": "Administrator Password Use for VM",
+        "attributes": {
+          "enabled": true
+        },
+        "value": "[parameters('Secret')]"
+      }
+    }
+  ]
+}

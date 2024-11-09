@@ -1,0 +1,53 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "name": {
+      "value": "Vault-Labo1"
+    },
+    "location": {
+      "value": "eastus"
+    },
+    "sku": {
+      "value": "Standard"
+    },
+    "accessPolicies": {
+      "value": []
+    },
+    "tenant": {
+      "value": "2b2a6365-d23a-4e3d-a0be-a44e8f5319b9"
+    },
+    "enabledForDeployment": {
+      "value": true
+    },
+    "enabledForTemplateDeployment": {
+      "value": true
+    },
+    "enabledForDiskEncryption": {
+      "value": false
+    },
+    "enableRbacAuthorization": {
+      "value": true
+    },
+    "publicNetworkAccess": {
+      "value": "Enabled"
+    },
+    "enableSoftDelete": {
+      "value": true
+    },
+    "softDeleteRetentionInDays": {
+      "value": 7
+    },
+    "networkAcls": {
+      "value": {
+        "defaultAction": "allow",
+        "bypass": "AzureServices",
+        "ipRules": [],
+        "virtualNetworkRules": []
+      }
+    },
+    "Secret": {
+      "value": null
+    }
+  }
+}
